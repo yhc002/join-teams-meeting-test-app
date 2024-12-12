@@ -1,5 +1,5 @@
 {
-  "name": "camtest",
+  "name": "teams-join-test-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -9,7 +9,9 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "@azure/communication-calling": "next",
+    "@azure/communication-common": "next"
   },
   "scripts": {
     "start": "react-scripts start",
