@@ -227,13 +227,12 @@ return (
   <div className="App">
     <h4>Azure Communication Services</h4>
     <h1>Teams meeting join quickstart</h1>
-    <input ref={tokenRef} type="text" placeholder="AzureCommunicationToken" />
+    <input id="token-input" ref={tokenRef} type="text" placeholder="AzureCommunicationToken" />
     {/* <input id="teams-link-input" type="text" placeholder="Teams meeting link" /> */}
-    <input ref={meetingLinkInputRef} type="text" placeholder="Teams meeting link" />
+    <input id="meeting-link-input" ref={meetingLinkInputRef} type="text" placeholder="Teams meeting link" />
     <p>Call state <span id="call-state">-</span></p>
-    <p><span id="recording-state"></span></p>
-    <div ref={remoteVideosGalleryRef} hidden={true}>Remote participants' video streams:</div>
-    <div ref={localVideoContainerRef} hidden={true}>Local video stream:</div>
+    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true}>Remote participants' video streams:</div>
+    <div id="local-video-container" ref={localVideoContainerRef} hidden={true}>Local video stream:</div>
     {/* <div id="localVideoContainer" hidden={true}>Local video stream:</div> */}
     <div>
         <button id="join-meeting-button" onClick={()=>init()} disabled={inited}>
