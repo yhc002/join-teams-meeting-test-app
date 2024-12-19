@@ -1,16 +1,16 @@
 import { useState, useRef } from "react";
-import { CallClient, VideoStreamRenderer, LocalVideoStream } from "@azure/communication-calling";
+import { CallClient, VideoStreamRenderer, LocalVideoStream, Features} from "@azure/communication-calling";
 import { AzureCommunicationTokenCredential } from '@azure/communication-common';
 import './App.css';
 
 
-let call;
-let callAgent;
-let deviceManager;
-let camera;
-let mic;
+// let call;
+// let callAgent;
+// let deviceManager;
+// let camera;
+// let mic;
 
-let localVideoStream;
+// let localVideoStream;
 let localVideoStreamRenderer;
 
 
@@ -24,8 +24,18 @@ let localVideoStreamRenderer;
 // const callStateElement = document.getElementById('call-state');
 
 function App() {
+  const [call, setCall] = useState(null)
+  const [callAgent, setCallAgent] = useState(null)
+  const [deviceManager, setDeviceManager] = useState(null)
+
+
   const [inited,setInited] = useState(false)
   const [joined, setJoined] = useState(false)
+  // const [bitrate, setBitrate] = useState(0)
+  const [frameHeight, setFrameHeight] = useState(240)
+  const [frameRate, setFrameRate] = useState(30)
+
+  const [localVideoStream,setLocalVideoStream] = useState(null)
   
   const tokenRef = useRef(0)
   const meetingLinkInputRef = useRef(0)
@@ -35,17 +45,17 @@ function App() {
 async function init() {
   const callClient = new CallClient();
   const tokenCredential = new AzureCommunicationTokenCredential(tokenRef.current.value);
-  callAgent = await callClient.createCallAgent(tokenCredential, { displayName: 'tester' });
+  let callAgent = await callClient.createCallAgent(tokenCredential, { displayName: 'tester' });
   // teamsMeetingJoinButton.disabled = false;
 
   //device settings
-  deviceManager = await callClient.getDeviceManager();
+  let deviceManager = await callClient.getDeviceManager();
   await deviceManager.askDevicePermission({ video: true });
   await deviceManager.askDevicePermission({ audio: true });
   console.log("deviceManager", deviceManager)
 
   const cameras = await deviceManager.getCameras()
-  camera = cameras
+  const camera = cameras
         ? cameras.length > 0
           ? cameras[0]
           : null
@@ -53,8 +63,11 @@ async function init() {
   console.log("camera",camera)
 
   const mics = await deviceManager.getMicrophones();
-  mic = mics.length > 0 ? mics[0] : null;
+  const mic = mics.length > 0 ? mics[0] : null;
   console.log("mic", mic)
+  setCallAgent(callAgent)
+  setLocalVideoStream(new LocalVideoStream(camera))
+  setDeviceManager(deviceManager)
   setInited(true)
 }
 
@@ -62,6 +75,7 @@ async function displayLocalVideoStream (LocalVideoStream) {
   try {
       // localVideoStream = new LocalVideoStream(camera)
       localVideoStreamRenderer = new VideoStreamRenderer(localVideoStream);
+      console.log("localVideoStream",localVideoStream)
       const view = await localVideoStreamRenderer.createView();
       if(localVideoContainerRef.current) {
         console.log("append view to local")
@@ -85,6 +99,8 @@ async function subscribeToCall (call) {
 
     call.on('isLocalVideoStartedChanged', () => {
       console.log(`isLocalVideoStarted changed: ${call.isLocalVideoStarted}`);
+      // if(!call.isLocalVideoStarted)
+      //   call.startVideo(localVideoStream)
     });
 
     // Inspect the call's current remote participants and subscribe to them.
@@ -103,6 +119,12 @@ async function subscribeToCall (call) {
             console.log('Remote participant removed from the call.');
         });
     });
+
+    const optimalVideoCountFeature = call.feature(Features.OptimalVideoCount);
+    optimalVideoCountFeature.on('optimalVideoCountChanged', () => {
+        const localOptimalVideoCountVariable = optimalVideoCountFeature.optimalVideoCount;
+        console.log("localOptimalVideoCount", localOptimalVideoCountVariable)
+    })
   }
   catch (error) {
     console.error(error);
@@ -170,16 +192,16 @@ const subscribeToRemoteVideoStream = async (remoteVideoStream) => {
 
   // Remote participant has switched video on/off
   remoteVideoStream.on('isAvailableChanged', async () => {
-      try {
-          if (remoteVideoStream.isAvailable) {
-              await createView();
-          } else {
-              view.dispose();
-              remoteVideosGalleryRef.current.removeChild(remoteVideoContainer);
-          }
-      } catch (e) {
-          console.error(e);
+    try {
+      if (remoteVideoStream.isAvailable) {
+        await createView();
+      } else {
+        view.dispose();
+        remoteVideosGalleryRef.current.removeChild(remoteVideoContainer);
       }
+    } catch (e) {
+      console.error(e);
+    }
   });
 
   // Remote participant has video on initially.
@@ -201,26 +223,49 @@ async function hangUp() {
 }
 
 async function join() {
-  localVideoStream = new LocalVideoStream(camera)
-  const videoOptions = { localVideoStreams: [localVideoStream] }
-  const audioOptions = {}
+  try {
+    // localVideoStream = new LocalVideoStream(camera)
+    console.log("frameHeight & frameRate", frameHeight, frameRate)
+    const videoOptions = {
+      localVideoStreams: [localVideoStream],
+      // constraints: {
+      //   send: {
+      //       // bitrate: {
+      //       //     max: 575000
+      //       // },
+      //       // frameHeight: {
+      //       //   max: 480
+      //       //   // max: Number(frameHeight)
+      //       // },
+      //       frameRate: {
+      //         max: 10
+      //         // max: Number(frameRate)
+      //       }
+      //   }
+      // }
+    }
+    const audioOptions = {}
 
-  await displayLocalVideoStream(LocalVideoStream)
+    await displayLocalVideoStream(LocalVideoStream)
 
 
-  call = callAgent.join({ meetingLink: meetingLinkInputRef.current.value }, {
-      videoOptions: videoOptions,
-      audioOptions: audioOptions
-  });
+    let call = callAgent.join({ meetingLink: meetingLinkInputRef.current.value }, {
+        videoOptions: videoOptions,
+        audioOptions: audioOptions
+    });
 
-  subscribeToCall(call)
-  // call.on('stateChanged', () => {
-  //     callStateElement.innerText = call.state;
-  // })
+    subscribeToCall(call)
+    // call.on('stateChanged', () => {
+    //     callStateElement.innerText = call.state;
+    // })
 
-  setJoined(true)
-  // hangUpButton.disabled = false;
-  // teamsMeetingJoinButton.disabled = true;  
+    setJoined(true)
+    setCall(call)
+    // hangUpButton.disabled = false;
+    // teamsMeetingJoinButton.disabled = true;  
+  } catch(error) {
+    console.log("join fail: ", error)
+  }
 }
 
 return (
@@ -228,11 +273,13 @@ return (
     <h4>Azure Communication Services</h4>
     <h1>Teams meeting join quickstart</h1>
     <input id="token-input" ref={tokenRef} type="text" placeholder="AzureCommunicationToken" />
-    {/* <input id="teams-link-input" type="text" placeholder="Teams meeting link" /> */}
     <input id="meeting-link-input" ref={meetingLinkInputRef} type="text" placeholder="Teams meeting link" />
+    <h1>Video Constraint Settings</h1>
+    <input id="frame-height-input" onChange={(e)=>setFrameHeight(e.target.value)} type="text" placeholder="frame height" />
+    <input id="frame-rate-input" onChange={(e)=>setFrameRate(e.target.value)} type="text" placeholder="frame rate" />
     <p>Call state <span id="call-state">-</span></p>
-    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true}>Remote participants' video streams:</div>
-    <div id="local-video-container" ref={localVideoContainerRef} hidden={true}>Local video stream:</div>
+    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true} style={{width: 480}}>Remote participants' video streams:</div>
+    <div id="local-video-container" ref={localVideoContainerRef} hidden={true} style={{width: 480}}>Local video stream:</div>
     {/* <div id="localVideoContainer" hidden={true}>Local video stream:</div> */}
     <div>
         <button id="join-meeting-button" onClick={()=>init()} disabled={inited}>
