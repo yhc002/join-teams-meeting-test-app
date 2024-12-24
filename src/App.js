@@ -4,36 +4,22 @@ import { AzureCommunicationTokenCredential } from '@azure/communication-common';
 import './App.css';
 
 
-// let call;
-// let callAgent;
-// let deviceManager;
-// let camera;
-// let mic;
-
-// let localVideoStream;
 let localVideoStreamRenderer;
 
-
-// const meetingLinkInput = document.getElementById('teams-link-input');
-
-// const remoteVideosGallery = document.getElementById('remoteVideosGallery');
-// const localVideoContainer = document.getElementById('localVideoContainer');
-
-// const hangUpButton = document.getElementById('hang-up-button');
-// const teamsMeetingJoinButton = document.getElementById('join-meeting-button');
-// const callStateElement = document.getElementById('call-state');
 
 function App() {
   const [call, setCall] = useState(null)
   const [callAgent, setCallAgent] = useState(null)
   const [deviceManager, setDeviceManager] = useState(null)
 
-
   const [inited,setInited] = useState(false)
   const [joined, setJoined] = useState(false)
   // const [bitrate, setBitrate] = useState(0)
-  const [frameHeight, setFrameHeight] = useState(240)
-  const [frameRate, setFrameRate] = useState(30)
+  // const [frameHeight, setFrameHeight] = useState(240)
+  // const [frameRate, setFrameRate] = useState(30)
+
+  const [remoteWidth, setRemoteWidth] = useState(320)
+  // const [remoteHeight, setRemoteHeight] = useState(240)
 
   const [localVideoStream,setLocalVideoStream] = useState(null)
   
@@ -225,7 +211,7 @@ async function hangUp() {
 async function join() {
   try {
     // localVideoStream = new LocalVideoStream(camera)
-    console.log("frameHeight & frameRate", frameHeight, frameRate)
+    // console.log("frameHeight & frameRate", frameHeight, frameRate)
     const videoOptions = {
       localVideoStreams: [localVideoStream],
       // constraints: {
@@ -274,11 +260,14 @@ return (
     <h1>Teams meeting join quickstart</h1>
     <input id="token-input" ref={tokenRef} type="text" placeholder="AzureCommunicationToken" />
     <input id="meeting-link-input" ref={meetingLinkInputRef} type="text" placeholder="Teams meeting link" />
-    <h1>Video Constraint Settings</h1>
+    {/* <h1>Video Constraint Settings</h1>
     <input id="frame-height-input" onChange={(e)=>setFrameHeight(e.target.value)} type="text" placeholder="frame height" />
-    <input id="frame-rate-input" onChange={(e)=>setFrameRate(e.target.value)} type="text" placeholder="frame rate" />
+    <input id="frame-rate-input" onChange={(e)=>setFrameRate(e.target.value)} type="text" placeholder="frame rate" /> */}
+    <h1>Remote Video Dimension</h1>
+    {/* <input id="remote-height-input" onChange={(e)=>setRemoteHeight(e.target.value)} type="text" placeholder="remote height" /> */}
+    <input id="remote-width-input" onChange={(e)=>setRemoteWidth(e.target.value)} type="text" placeholder="remote width" />
     <p>Call state <span id="call-state">-</span></p>
-    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true} style={{width: 480}}>Remote participants' video streams:</div>
+    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true} style={{width: remoteWidth}}>Remote participants' video streams:</div>
     <div id="local-video-container" ref={localVideoContainerRef} hidden={true} style={{width: 480}}>Local video stream:</div>
     {/* <div id="localVideoContainer" hidden={true}>Local video stream:</div> */}
     <div>
