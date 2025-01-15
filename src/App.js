@@ -14,10 +14,6 @@ function App() {
 
   const [inited,setInited] = useState(false)
   const [joined, setJoined] = useState(false)
-
-  // const [remotes,setRemotes] = useState(0)
-  let remotes=0
-
   // const [bitrate, setBitrate] = useState(0)
   // const [frameHeight, setFrameHeight] = useState(240)
   // const [frameRate, setFrameRate] = useState(30)
@@ -101,10 +97,8 @@ async function subscribeToCall (call) {
     // notified when new participants are added to the call or removed from the call.
     call.on('remoteParticipantsUpdated', e => {
         // Subscribe to new remote participants that are added to the call.
-        console.log('remoteParticipantsUpdated',e)
         e.added.forEach(remoteParticipant => {
             subscribeToRemoteParticipant(remoteParticipant)
-            
         });
         // Unsubscribe from participants that are removed from the call
         e.removed.forEach(remoteParticipant => {
@@ -159,13 +153,7 @@ const subscribeToRemoteVideoStream = async (remoteVideoStream) => {
   let renderer = new VideoStreamRenderer(remoteVideoStream);
   let view;
   let remoteVideoContainer = document.createElement('div');
-  remoteVideoContainer.className = `remote-video-container${remotes}`;
-
-  if(remotes>0) {
-    remoteVideoContainer.style.width = "320px";
-    remoteVideoContainer.style.height = "240px";
-  }
-  remotes=remotes+1
+  remoteVideoContainer.className = 'remote-video-container';
 
   remoteVideoStream.on('isReceivingChanged', () => {
       try {
@@ -215,8 +203,6 @@ const subscribeToRemoteVideoStream = async (remoteVideoStream) => {
 async function hangUp() {
   await call.hangUp();
   setJoined(false)
-  remotes=0
-  // setRemotes(0)
   // hangUpButton.disabled = true;
   // teamsMeetingJoinButton.disabled = false;
   // callStateElement.innerText = '-';
@@ -281,6 +267,9 @@ return (
     {/* <input id="remote-height-input" onChange={(e)=>setRemoteHeight(e.target.value)} type="text" placeholder="remote height" /> */}
     {/* <input id="remote-width-input" onChange={(e)=>setRemoteWidth(e.target.value)} type="text" placeholder="remote width" /> */}
     <p>Call state <span id="call-state">-</span></p>
+    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true} style={{ display:"flex", flexDirection:"row", height:540 }}>Remote participant's video streams:</div>
+    <div id="local-video-container" ref={localVideoContainerRef} hidden={true} style={{width: 480}}>Local video stream:</div>
+    {/* <div id="localVideoContainer" hidden={true}>Local video stream:</div> */}
     <div>
         <button id="join-meeting-button" onClick={()=>init()} disabled={inited}>
           Init
@@ -295,9 +284,6 @@ return (
             Hang Up
         </button>
     </div>
-    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true} style={{ display:"flex", flexDirection:"row", height:540 }}>Remote participant's video streams:</div>
-    <div id="local-video-container" ref={localVideoContainerRef} hidden={true} style={{width: 400}}>Local video stream:</div>
-    {/* <div id="localVideoContainer" hidden={true}>Local video stream:</div> */}
   </div>
 );
 }
