@@ -260,16 +260,6 @@ return (
     <h1>Teams meeting join quickstart</h1>
     <input id="token-input" ref={tokenRef} type="text" placeholder="AzureCommunicationToken" />
     <input id="meeting-link-input" ref={meetingLinkInputRef} type="text" placeholder="Teams meeting link" />
-    {/* <h1>Video Constraint Settings</h1>
-    <input id="frame-height-input" onChange={(e)=>setFrameHeight(e.target.value)} type="text" placeholder="frame height" />
-    <input id="frame-rate-input" onChange={(e)=>setFrameRate(e.target.value)} type="text" placeholder="frame rate" /> */}
-    {/* <h1>Remote Video Dimension</h1> */}
-    {/* <input id="remote-height-input" onChange={(e)=>setRemoteHeight(e.target.value)} type="text" placeholder="remote height" /> */}
-    {/* <input id="remote-width-input" onChange={(e)=>setRemoteWidth(e.target.value)} type="text" placeholder="remote width" /> */}
-    <p>Call state <span id="call-state">-</span></p>
-    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true} style={{ display:"flex", flexDirection:"row", height:540 }}>Remote participant's video streams:</div>
-    <div id="local-video-container" ref={localVideoContainerRef} hidden={true} style={{width: 480}}>Local video stream:</div>
-    {/* <div id="localVideoContainer" hidden={true}>Local video stream:</div> */}
     <div>
         <button id="join-meeting-button" onClick={()=>init()} disabled={inited}>
           Init
@@ -284,6 +274,16 @@ return (
             Hang Up
         </button>
     </div>
+    {/* <h1>Video Constraint Settings</h1>
+    <input id="frame-height-input" onChange={(e)=>setFrameHeight(e.target.value)} type="text" placeholder="frame height" />
+    <input id="frame-rate-input" onChange={(e)=>setFrameRate(e.target.value)} type="text" placeholder="frame rate" /> */}
+    {/* <h1>Remote Video Dimension</h1> */}
+    {/* <input id="remote-height-input" onChange={(e)=>setRemoteHeight(e.target.value)} type="text" placeholder="remote height" /> */}
+    {/* <input id="remote-width-input" onChange={(e)=>setRemoteWidth(e.target.value)} type="text" placeholder="remote width" /> */}
+    <p>Call state <span id="call-state">-</span></p>
+    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true} style={{ display:"flex", flexDirection:"row", height:540 }}>Remote participant's video streams:</div>
+    <div id="local-video-container" ref={localVideoContainerRef} hidden={true} style={{width: 480}}>Local video stream:</div>
+    {/* <div id="localVideoContainer" hidden={true}>Local video stream:</div> */}
   </div>
 );
 }
