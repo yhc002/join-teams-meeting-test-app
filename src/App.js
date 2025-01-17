@@ -18,8 +18,8 @@ function App() {
   // const [frameHeight, setFrameHeight] = useState(240)
   // const [frameRate, setFrameRate] = useState(30)
 
-  const [remoteWidth, setRemoteWidth] = useState(320)
-  // const [remoteHeight, setRemoteHeight] = useState(240)
+  // const [remoteWidth, setRemoteWidth] = useState(320)
+  const [remoteHeight, setRemoteHeight] = useState(240)
 
   const [localVideoStream,setLocalVideoStream] = useState(null)
   
@@ -154,6 +154,7 @@ const subscribeToRemoteVideoStream = async (remoteVideoStream) => {
   let view;
   let remoteVideoContainer = document.createElement('div');
   remoteVideoContainer.className = 'remote-video-container';
+  remoteVideoContainer.style.padding = "1rem"
 
   remoteVideoStream.on('isReceivingChanged', () => {
       try {
@@ -277,11 +278,11 @@ return (
     {/* <h1>Video Constraint Settings</h1>
     <input id="frame-height-input" onChange={(e)=>setFrameHeight(e.target.value)} type="text" placeholder="frame height" />
     <input id="frame-rate-input" onChange={(e)=>setFrameRate(e.target.value)} type="text" placeholder="frame rate" /> */}
-    {/* <h1>Remote Video Dimension</h1> */}
-    {/* <input id="remote-height-input" onChange={(e)=>setRemoteHeight(e.target.value)} type="text" placeholder="remote height" /> */}
+    <h3>Remote Video Dimension</h3>
+    <input id="remote-height-input" onChange={(e)=>setRemoteHeight(Number(e.target.value))} type="text" placeholder="remote height" />
     {/* <input id="remote-width-input" onChange={(e)=>setRemoteWidth(e.target.value)} type="text" placeholder="remote width" /> */}
-    <p>Call state <span id="call-state">-</span></p>
-    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true} style={{ display:"flex", flexDirection:"row", height:540 }}>Remote participant's video streams:</div>
+    {/* <p>Call state <span id="call-state">-</span></p> */}
+    <div id="remote-video-gallery" ref={remoteVideosGalleryRef} hidden={true} style={{ display:"flex", flexDirection:"row", height: remoteHeight }}>Remote participant's video streams:</div>
     <div id="local-video-container" ref={localVideoContainerRef} hidden={true} style={{width: 480}}>Local video stream:</div>
     {/* <div id="localVideoContainer" hidden={true}>Local video stream:</div> */}
   </div>
