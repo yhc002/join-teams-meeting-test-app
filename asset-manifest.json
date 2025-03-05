@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/join-teams-meeting-test-app/static/css/main.f855e6bc.css",
-    "main.js": "/join-teams-meeting-test-app/static/js/main.7ebfb2b5.js",
+    "main.js": "/join-teams-meeting-test-app/static/js/main.4414a044.js",
     "index.html": "/join-teams-meeting-test-app/index.html",
     "main.f855e6bc.css.map": "/join-teams-meeting-test-app/static/css/main.f855e6bc.css.map",
-    "main.7ebfb2b5.js.map": "/join-teams-meeting-test-app/static/js/main.7ebfb2b5.js.map"
+    "main.4414a044.js.map": "/join-teams-meeting-test-app/static/js/main.4414a044.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.7ebfb2b5.js"
+    "static/js/main.4414a044.js"
   ]
 }
