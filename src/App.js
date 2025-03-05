@@ -128,8 +128,13 @@ const subscribeToRemoteParticipant = (remoteParticipant) => {
 
       // Inspect the remoteParticipants's current videoStreams and subscribe to them.
       remoteParticipant.videoStreams.forEach(remoteVideoStream => {
-        console.log("remoteVideoStream for Each", remoteVideoStream)
-        subscribeToRemoteVideoStream(remoteVideoStream)
+        console.log("remoteVideoStream for Each")
+        if(remoteVideoStream.mediaStreamType=="Video") {
+          console.log("mediaStreamType is Video")
+          subscribeToRemoteVideoStream(remoteVideoStream)
+        } else {
+          console.log("mediaStreamType is not Video")
+        } 
       });
       // Subscribe to the remoteParticipant's 'videoStreamsUpdated' event to be
       // notified when the remoteParticiapant adds new videoStreams and removes video streams.
