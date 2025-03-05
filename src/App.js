@@ -170,8 +170,11 @@ const subscribeToRemoteVideoStream = async (remoteVideoStream) => {
   remoteVideoStream.on('isReceivingChanged', () => {
       try {
           if (remoteVideoStream.isAvailable) {
-            console.log("remoteVideoStream is available")  
+            console.log("isReceivingChanged - remoteVideoStream available")
             // const isReceiving = remoteVideoStream.isReceiving;
+          }
+          else {
+            console.log("isReceivingChanged - remoteVideoStream unavailable")
           }
       } catch (e) {
           console.error(e);
@@ -192,8 +195,10 @@ const subscribeToRemoteVideoStream = async (remoteVideoStream) => {
   remoteVideoStream.on('isAvailableChanged', async () => {
     try {
       if (remoteVideoStream.isAvailable) {
+        console.log("iAvailableChanged - remoteVideoStream available")
         await createView();
       } else {
+        console.log("iAvailableChanged - remoteVideoStream unavailable")
         view.dispose();
         remoteVideosGalleryRef.current.removeChild(remoteVideoContainer);
       }
@@ -205,7 +210,8 @@ const subscribeToRemoteVideoStream = async (remoteVideoStream) => {
   // Remote participant has video on initially.
   if (remoteVideoStream.isAvailable) {
       try {
-          await createView();
+        console.log("remoteVideoStream available")  
+        await createView();
       } catch (e) {
           console.error(e);
       }
