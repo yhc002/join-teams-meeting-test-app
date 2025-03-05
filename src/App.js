@@ -140,9 +140,15 @@ const subscribeToRemoteParticipant = (remoteParticipant) => {
       // notified when the remoteParticiapant adds new videoStreams and removes video streams.
       remoteParticipant.on('videoStreamsUpdated', e => {
           // Subscribe to new remote participant's video streams that were added.
+          console.log('videoStreamsUpdated')
           e.added.forEach(remoteVideoStream => {
               console.log("remoteVideoStream", remoteVideoStream)
-              subscribeToRemoteVideoStream(remoteVideoStream)
+              if(remoteVideoStream.mediaStreamType=="Video") {
+                console.log("mediaStreamType is Video")
+                subscribeToRemoteVideoStream(remoteVideoStream)
+              } else {
+                console.log("mediaStreamType is not Video")
+              } 
           });
           // Unsubscribe from remote participant's video streams that were removed.
           e.removed.forEach(remoteVideoStream => {
